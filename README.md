@@ -9,7 +9,11 @@ Currently it only supports following controls:
 * Mute
 * Volume slider
 * Play rate control
-* Full screen 
+* Full screen
+
+  
+![Player Screenshot](/example.jpeg?raw=true)
+
 
 ## Usage ##
 
