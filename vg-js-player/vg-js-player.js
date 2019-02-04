@@ -1,9 +1,8 @@
-
+//
 // Load style files
+//
 loadExtraFile("vg-js-player/fontawesome/css/all.css");
 loadExtraFile("vg-js-player/vg-js-player.css");
-
-
 
 function loadExtraFile (filename) {
     var fileref = document.createElement("link");
@@ -14,7 +13,30 @@ function loadExtraFile (filename) {
 }
 
 
+//
+// Create controls and add event handlers when the window loads
+//
+window.addEventListener("load", function() {
+    // Add control bar for each video with our attribute
+    var i = 0;
+    var videoTags = document.getElementsByTagName("video");
+    for (item of videoTags) {
+        if (item.hasAttribute("vg-js-player")) {
+            // Create controls for a current video tag
+            var controlBar = createControls(item, i);
+            item.parentNode.insertBefore(controlBar, item.nextSibling);
+            
+            // Add event handlers for a current tag
+            addEventHandlers(item, i);
+        }
+        i++;
+    }    
+});
 
+
+//
+// Create controls
+//
 function createControls(video, myID) {
     var div = document.createElement("div");
     div.setAttribute("id", "vg-controls_" + myID);
@@ -138,24 +160,10 @@ function createControls(video, myID) {
 }
 
 
-window.addEventListener("load", function() {
-    // Add control bar for each video with our attribute
-    var i = 0;
-    var videoTags = document.getElementsByTagName("video");
-    for (item of videoTags) {
-        if (item.hasAttribute("vg-js-player")) {
-            // Create controls for a current video tag
-            var controlBar = createControls(item, i);
-            item.parentNode.insertBefore(controlBar, item.nextSibling);
-            
-            // Add event handlers for a current tag
-            addEventHandlers(item, i);
-        }
-        i++;
-    }    
-});
 
-
+//
+// Add event handlers when the window loads
+//
 function addEventHandlers(video, myID) {
     
     
@@ -192,8 +200,11 @@ function addEventHandlers(video, myID) {
     seekBar.style.width = '' + 100 + '%';
     
     function updateControlsWidth(video) {
-        container.style.width = video.offsetWidth + "px";
-        var seekBarWidth = video.offsetWidth - 400 - 15;
+        newWidth = video.offsetWidth;
+        video.style.objectFit = "fill";
+        video.style.height = "auto";
+        container.style.width = newWidth + "px";
+        var seekBarWidth = newWidth - 400 - 15;
         ctable.rows[0].cells[1].width = seekBarWidth;
     }
 
@@ -236,6 +247,7 @@ function addEventHandlers(video, myID) {
     // Video is loaded so just update the metadata directly.
     if (video.readyState === 4 ) {
         updateVideoMetadata(video);
+        updateControlsWidth(video)
     }
 
     
